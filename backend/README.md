@@ -32,30 +32,11 @@
 
 3. **Запуск базы данных в Docker:**
 
-   Убедитесь, что Docker и Docker Compose установлены. В корне проекта создайте файл `docker-compose.yml` и вставьте туда следующий контент:
-
-   ```yaml
-   version: '3.8'
-   services:
-     database:
-       image: postgres:latest
-       container_name: my_postgres_db
-       environment:
-         POSTGRES_USER: username
-         POSTGRES_PASSWORD: password
-         POSTGRES_DB: blog
-       ports:
-         - "5432:5432"
-       volumes:
-         - postgres_data:/var/lib/postgresql/data
-
-   volumes:
-     postgres_data:
-   ```
+   Убедитесь, что Docker и Docker Compose установлены. В корне проекта у вас есть файл `docker-compose.yml`.
 
    **Примечание:** Пароль, указанный в `docker-compose.yml`, должен совпадать с паролем, указанным в конфигурации `TypeOrm`.
 
-   Запустите контейнер:
+   Запустите контейнер в корне проекте:
 
    ```bash
    docker-compose up -d
@@ -63,6 +44,7 @@
 
 4. **Запуск приложения:**
 
+   Вернитесь в каталог проекта и запустите сервер:
    ```bash
    npm run start
    ```

@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"  # Проброс порта для доступа к БД из вашего хоста
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Псевдоним тома для хранения данных
+      - postgres_data:/var/lib/postgresql # Псевдоним тома для хранения данных
 
 volumes:
   postgres_data:
