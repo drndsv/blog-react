@@ -15,7 +15,7 @@ export type Article = {
 export type Comment = {
   id: number;
   content: string;
-  user?: User;
+  user?: Pick<User, 'id' | 'name'>;
   articleId?: number;
 };
 

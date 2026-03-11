@@ -75,7 +75,11 @@ const ProfilePage = ({ user, articles, comments }: ProfilePageProps) => {
             ) : (
               <Stack spacing={2}>
                 {articles.map((article) => (
-                  <ArticleCard key={article.id} article={article} />
+                  <ArticleCard
+                    key={article.id}
+                    article={article}
+                    currentUser={user}
+                  />
                 ))}
               </Stack>
             )}

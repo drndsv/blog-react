@@ -53,6 +53,69 @@ export const getComments = async (page = 1, limit = 50) => {
   return response.data;
 };
 
+export const getCommentsByArticle = async (
+  articleId: number,
+  page = 1,
+  limit = 20,
+) => {
+  const response = await api.get<PaginatedResponse<Comment>>(
+    `/comments/article/${articleId}`,
+    {
+      params: {
+        page,
+        limit,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const createComment = async (
+  token: string,
+  payload: {
+    content: string;
+    articleId: number;
+  },
+) => {
+  const response = await api.post<Comment>('/comments', payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
+export const updateComment = async (
+  token: string,
+  commentId: number,
+  payload: {
+    content: string;
+  },
+) => {
+  const response = await api.patch<Comment>(`/comments/${commentId}`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
+export const deleteComment = async (token: string, commentId: number) => {
+  const response = await api.delete<{ deleted: boolean }>(
+    `/comments/${commentId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return response.data;
+};
+
 export const createArticle = async (
   token: string,
   payload: { title: string; content: string; previewImage?: File | null },

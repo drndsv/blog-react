@@ -1,13 +1,4 @@
-import {
-  Container,
-  Typography,
-  Button,
-  Stack,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-} from '@mui/material';
+import { Container, Typography, Button, Stack, Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { getUserProfile, getArticles } from '../lib/api';
 import { wrapper, setUser } from '../store/store';
@@ -15,7 +6,7 @@ import Header from '../components/Header';
 import cookie from 'cookie';
 import { useRouter } from 'next/router';
 import type { Article } from '../lib/apiTypes';
-import { getImageUrl } from '../lib/utils/getImageUrl';
+import { ArticleCard } from '../components/articles/ArticleCard';
 
 type HomePageProps = {
   user: {
@@ -59,32 +50,11 @@ const HomePage = ({ user, articles }: HomePageProps) => {
             ) : (
               <Stack spacing={2}>
                 {articles.map((article) => (
-                  <Card key={article.id} variant="outlined">
-                    {article.previewImage && (
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={getImageUrl(article.previewImage)}
-                        alt={article.title}
-                      />
-                    )}
-
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {article.title}
-                      </Typography>
-
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1 }}
-                      >
-                        Author: {article.author?.name ?? 'Unknown'}
-                      </Typography>
-
-                      <Typography variant="body1">{article.content}</Typography>
-                    </CardContent>
-                  </Card>
+                  <ArticleCard
+                    key={article.id}
+                    article={article}
+                    currentUser={user}
+                  />
                 ))}
               </Stack>
             )}
