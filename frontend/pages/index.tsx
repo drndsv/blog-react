@@ -6,6 +6,7 @@ import {
   Box,
   Card,
   CardContent,
+  CardMedia,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { getUserProfile, getArticles } from '../lib/api';
@@ -14,6 +15,7 @@ import Header from '../components/Header';
 import cookie from 'cookie';
 import { useRouter } from 'next/router';
 import type { Article } from '../lib/apiTypes';
+import { getImageUrl } from '../lib/utils/getImageUrl';
 
 type HomePageProps = {
   user: {
@@ -58,6 +60,15 @@ const HomePage = ({ user, articles }: HomePageProps) => {
               <Stack spacing={2}>
                 {articles.map((article) => (
                   <Card key={article.id} variant="outlined">
+                    {article.previewImage && (
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={getImageUrl(article.previewImage)}
+                        alt={article.title}
+                      />
+                    )}
+
                     <CardContent>
                       <Typography variant="h6" gutterBottom>
                         {article.title}
