@@ -7,15 +7,26 @@ import {
   Divider,
   Stack,
   Typography,
+  TextField,
+  Alert,
+  Button,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import cookie from 'cookie';
+import Cookies from 'js-cookie';
 
 import Header from '../components/Header';
-import { getArticles, getComments, getUserProfile } from '../lib/api';
+import {
+  createArticle,
+  getArticles,
+  getComments,
+  getUserProfile,
+} from '../lib/api';
 import { wrapper, setUser } from '../store/store';
 import type { Article, Comment, User } from '../lib/apiTypes';
 import { getImageUrl } from '../lib/utils/getImageUrl';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 type ProfilePageProps = {
   user: User | null;
@@ -24,6 +35,54 @@ type ProfilePageProps = {
 };
 
 const ProfilePage = ({ user, articles, comments }: ProfilePageProps) => {
+  const router = useRouter();
+
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [previewImage, setPreviewImage] = useState<File | null>(null);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCreateArticle = async () => {
+    setSubmitError('');
+    setSubmitSuccess('');
+
+    if (!title.trim() || !content.trim()) {
+      setSubmitError('Title and content are required');
+      return;
+    }
+
+    const token = Cookies.get('jwt');
+
+    if (!token) {
+      setSubmitError('You are not authorized');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      await createArticle(token, {
+        title: title.trim(),
+        content: content.trim(),
+        previewImage,
+      });
+
+      setSubmitSuccess('Article created successfully');
+      setTitle('');
+      setContent('');
+      setPreviewImage(null);
+
+      await router.replace(router.asPath);
+    } catch (err) {
+      console.error('Create article failed:', err);
+      setSubmitError('Failed to create article');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (!user) {
     return (
       <div>
@@ -43,7 +102,6 @@ const ProfilePage = ({ user, articles, comments }: ProfilePageProps) => {
   return (
     <div>
       <Header />
-
       <Container sx={{ py: 4 }}>
         <Stack spacing={4}>
           <Box>
@@ -63,6 +121,68 @@ const ProfilePage = ({ user, articles, comments }: ProfilePageProps) => {
                   <Typography variant="body1">
                     <strong>Email:</strong> {user.email}
                   </Typography>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Box>
+
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              Create Article
+            </Typography>
+
+            <Card variant="outlined">
+              <CardContent>
+                <Stack spacing={2}>
+                  {submitError && <Alert severity="error">{submitError}</Alert>}
+                  {submitSuccess && (
+                    <Alert severity="success">{submitSuccess}</Alert>
+                  )}
+
+                  <TextField
+                    label="Title"
+                    fullWidth
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+
+                  <Button variant="outlined" component="label">
+                    Upload preview image
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null;
+                        setPreviewImage(file);
+                      }}
+                    />
+                  </Button>
+
+                  {previewImage && (
+                    <Typography variant="body2" color="text.secondary">
+                      Selected file: {previewImage.name}
+                    </Typography>
+                  )}
+
+                  <TextField
+                    label="Content"
+                    fullWidth
+                    multiline
+                    minRows={5}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                  />
+
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="contained"
+                      onClick={handleCreateArticle}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Creating...' : 'Create article'}
+                    </Button>
+                  </Box>
                 </Stack>
               </CardContent>
             </Card>

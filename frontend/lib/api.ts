@@ -32,7 +32,7 @@ export const register = async (
   return response.data;
 };
 
-export const getArticles = async (page = 1, limit = 1, query = '') => {
+export const getArticles = async (page = 1, limit = 20, query = '') => {
   const response = await api.get<PaginatedResponse<Article>>('/articles', {
     params: {
       page,
@@ -50,6 +50,25 @@ export const getComments = async (page = 1, limit = 50) => {
       limit,
     },
   });
+  return response.data;
+};
+
+export const createArticle = async (
+  token: string,
+  payload: { title: string; content: string; previewImage?: File | null },
+) => {
+  const formData = new FormData();
+  formData.append('title', payload.title);
+  formData.append('content', payload.content);
+
+  if (payload.previewImage) {
+    formData.append('previewImage', payload.previewImage);
+  }
+
+  const response = await api.post<Article>('/articles', formData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   return response.data;
 };
 export default api;
