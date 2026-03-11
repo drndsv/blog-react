@@ -1,4 +1,5 @@
 import { Container, Typography, Button, Stack, Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { GetServerSideProps } from 'next';
 import { getUserProfile, getArticles } from '../lib/api';
 import { wrapper, setUser } from '../store/store';
@@ -48,15 +49,13 @@ const HomePage = ({ user, articles }: HomePageProps) => {
             {articles.length === 0 ? (
               <Typography color="text.secondary">No articles yet.</Typography>
             ) : (
-              <Stack spacing={2}>
+              <Grid container spacing={2}>
                 {articles.map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
-                    currentUser={user}
-                  />
+                  <Grid key={article.id} size={{ xs: 12, md: 6, lg: 4 }}>
+                    <ArticleCard article={article} currentUser={user} />
+                  </Grid>
                 ))}
-              </Stack>
+              </Grid>
             )}
           </Box>
         </Stack>

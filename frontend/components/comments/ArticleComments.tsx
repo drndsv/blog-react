@@ -1,6 +1,6 @@
-import { Alert, Stack, Typography } from '@mui/material';
+import { Alert, Button, Stack, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { Comment, User } from '../../lib/apiTypes';
 import {
@@ -9,7 +9,10 @@ import {
   getCommentsByArticle,
   updateComment,
 } from '../../lib/api';
-import { COMMENT_MAX_LENGTH } from '../../lib/constants/article';
+import {
+  COMMENT_MAX_LENGTH,
+  INITIAL_VISIBLE_COMMENTS_COUNT,
+} from '../../lib/constants/article';
 import { CommentForm } from './CommentForm';
 import { CommentItem } from './CommentItem';
 
@@ -37,24 +40,42 @@ export const ArticleComments = ({
     null,
   );
 
-  const loadComments = async () => {
+  const [showAllComments, setShowAllComments] = useState(false);
+
+  const loadComments = useCallback(async () => {
     try {
       setIsCommentsLoading(true);
       setCommentsError('');
-
       const response = await getCommentsByArticle(articleId, 1, 50);
-      setComments(response.data);
+
+      const sortedComments = [...response.data].sort((a, b) => b.id - a.id);
+
+      setComments(sortedComments);
     } catch (err) {
       console.error('Failed to load comments:', err);
       setCommentsError('Failed to load comments');
     } finally {
       setIsCommentsLoading(false);
     }
-  };
+  }, [articleId]);
 
   useEffect(() => {
     void loadComments();
-  }, [articleId]);
+  }, [articleId, loadComments]);
+
+  const visibleComments = useMemo(() => {
+    if (showAllComments) {
+      return comments;
+    }
+
+    return comments.slice(0, INITIAL_VISIBLE_COMMENTS_COUNT);
+  }, [comments, showAllComments]);
+
+  const hasHiddenComments =
+    comments.length > INITIAL_VISIBLE_COMMENTS_COUNT && !showAllComments;
+
+  const canShowLess =
+    comments.length > INITIAL_VISIBLE_COMMENTS_COUNT && showAllComments;
 
   const handleCreateComment = async () => {
     setSubmitError('');
@@ -192,7 +213,7 @@ export const ArticleComments = ({
         <Typography color="text.secondary">No comments yet</Typography>
       ) : (
         <Stack spacing={2}>
-          {comments.map((comment) => (
+          {visibleComments.map((comment) => (
             <CommentItem
               key={comment.id}
               comment={comment}
@@ -208,6 +229,17 @@ export const ArticleComments = ({
               onDelete={handleDeleteComment}
             />
           ))}
+          {hasHiddenComments && (
+            <Button variant="text" onClick={() => setShowAllComments(true)}>
+              Show all comments ({comments.length})
+            </Button>
+          )}
+
+          {canShowLess && (
+            <Button variant="text" onClick={() => setShowAllComments(false)}>
+              Show less
+            </Button>
+          )}
         </Stack>
       )}
     </Stack>
