@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { logout } from '../lib/api';
@@ -19,18 +19,40 @@ const Header = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
+        <Typography
+          variant="h6"
+          sx={{ flexGrow: 1, cursor: 'pointer' }}
+          onClick={() => router.push('/')}
+        >
           Blog
         </Typography>
-        {!user ? (
-          <Button color="inherit" onClick={() => router.push('/login')}>
-            Login
+
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button color="inherit" onClick={() => router.push('/')}>
+            Home
           </Button>
-        ) : (
-          <Button color="inherit" onClick={handleLogout}>
-            Logout
-          </Button>
-        )}
+
+          {user && (
+            <Button color="inherit" onClick={() => router.push('/profile')}>
+              Profile
+            </Button>
+          )}
+
+          {!user ? (
+            <>
+              <Button color="inherit" onClick={() => router.push('/login')}>
+                Login
+              </Button>
+              <Button color="inherit" onClick={() => router.push('/register')}>
+                Register
+              </Button>
+            </>
+          ) : (
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );

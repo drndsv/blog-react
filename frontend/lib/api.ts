@@ -1,37 +1,10 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import type { Article, Comment, PaginatedResponse } from './apiTypes';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
 });
-
-export type User = {
-  id: number;
-  email: string;
-  name: string;
-};
-
-export type Article = {
-  id: number;
-  title: string;
-  content: string;
-  previewImage?: string | null;
-  author?: User;
-};
-
-export type Comment = {
-  id: number;
-  content: string;
-  user?: User;
-  articleId?: number;
-};
-
-export type PaginatedResponse<T> = {
-  data: T[];
-  count: number;
-  page: number;
-  pageCount: number;
-};
 
 export const login = async (email: string, password: string) => {
   const response = await api.post('/auth/login', { email, password });
