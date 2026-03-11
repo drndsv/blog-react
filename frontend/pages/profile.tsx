@@ -11,6 +11,7 @@ import { ProfileInfoCard } from '../components/profile/ProfileInfoCard';
 import { getArticles, getComments, getUserProfile } from '../lib/api';
 import type { Article, Comment, User } from '../lib/apiTypes';
 import { wrapper, setUser } from '../store/store';
+import Grid from '@mui/material/Grid2';
 
 type ProfilePageProps = {
   user: User | null;
@@ -73,15 +74,13 @@ const ProfilePage = ({ user, articles, comments }: ProfilePageProps) => {
                 You have no articles yet.
               </Typography>
             ) : (
-              <Stack spacing={2}>
+              <Grid container spacing={2}>
                 {articles.map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
-                    currentUser={user}
-                  />
+                  <Grid key={article.id} size={{ xs: 12, md: 6, lg: 4 }}>
+                    <ArticleCard article={article} currentUser={user} />
+                  </Grid>
                 ))}
-              </Stack>
+              </Grid>
             )}
           </Box>
 

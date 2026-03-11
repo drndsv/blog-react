@@ -16,7 +16,7 @@ type ArticleCardProps = {
 
 export const ArticleCard = ({ article, currentUser }: ArticleCardProps) => {
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ height: '100%' }}>
       {article.previewImage && (
         <CardMedia
           component="img"
