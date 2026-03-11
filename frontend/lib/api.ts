@@ -71,7 +71,7 @@ export const getArticles = async (page = 1, limit = 1, query = '') => {
 };
 
 export const getComments = async (page = 1, limit = 50) => {
-  const response = await api.get<PaginatedResponse<Article>>('/comments', {
+  const response = await api.get<PaginatedResponse<Comment>>('/comments', {
     params: {
       page,
       limit,
