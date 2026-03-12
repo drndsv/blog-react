@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ArticleCard } from './ArticleCard';
-import {storybookHandlers} from '../../mocks/storybookHandlers';
+import { ArticleCard } from '../ArticleCard';
+import { storybookHandlers } from '../../../mocks/storybookHandlers';
 
 const meta: Meta<typeof ArticleCard> = {
   title: 'Articles/ArticleCard',
@@ -8,8 +8,8 @@ const meta: Meta<typeof ArticleCard> = {
   parameters:{
     msw:{
       handlers: storybookHandlers
-    }
-  }
+    },
+  },
 };
 
 export default meta;
@@ -36,14 +36,20 @@ const authorizedUser = {
 
 export const GuestUser: Story = {
   args: {
-    article: baseArticle,
+    article: {
+      ...baseArticle,
+    id: 1,
+    },
     currentUser: null,
   },
 };
 
 export const AuthorizedUser: Story = {
   args: {
-    article: baseArticle,
+    article: {
+      ...baseArticle,
+      id: 2,
+    },
     currentUser: authorizedUser,
   },
 };
@@ -52,6 +58,7 @@ export const WithoutImage: Story = {
   args: {
     article: {
       ...baseArticle,
+      id: 3,
       title: 'Article without image',
       previewImage: null,
     },
@@ -63,6 +70,7 @@ export const LongContent: Story = {
   args: {
     article: {
       ...baseArticle,
+      id: 4,
       title: 'Very long article content',
       content:
         'This is a very long text. '.repeat(40) +
@@ -76,6 +84,7 @@ export const LongTitle: Story = {
   args: {
     article: {
       ...baseArticle,
+      id: 5,
       title:
         'This is an extremely long article title to test how the component behaves when titles overflow',
     },
