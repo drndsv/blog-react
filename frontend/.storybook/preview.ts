@@ -13,7 +13,7 @@ const preview: Preview = {
       },
     },
   },
-  loaders:[mswLoader]
+  loaders: [mswLoader],
 };
 
 export default preview;

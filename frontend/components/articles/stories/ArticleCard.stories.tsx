@@ -5,9 +5,9 @@ import { storybookHandlers } from '../../../mocks/storybookHandlers';
 const meta: Meta<typeof ArticleCard> = {
   title: 'Articles/ArticleCard',
   component: ArticleCard,
-  parameters:{
-    msw:{
-      handlers: storybookHandlers
+  parameters: {
+    msw: {
+      handlers: storybookHandlers,
     },
   },
 };
@@ -38,7 +38,7 @@ export const GuestUser: Story = {
   args: {
     article: {
       ...baseArticle,
-    id: 1,
+      id: 1,
     },
     currentUser: null,
   },
