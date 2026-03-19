@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "playwright test"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "playwright test",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -26,13 +30,31 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^1.9.0",
     "@playwright/test": "^1.47.2",
+    "@storybook/addon-essentials": "8.3.5",
+    "@storybook/addon-interactions": "8.3.5",
+    "@storybook/addon-links": "8.3.5",
+    "@storybook/addon-onboarding": "8.3.5",
+    "@storybook/blocks": "8.3.5",
+    "@storybook/nextjs": "8.3.5",
+    "@storybook/react": "8.3.5",
+    "@storybook/test": "8.3.5",
     "@types/node": "^20.16.10",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.14",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-storybook": "^0.9.0",
+    "msw": "^2.12.10",
+    "msw-storybook-addon": "^2.0.6",
+    "prettier": "^3.8.1",
     "storybook": "^8.3.5",
     "typescript": "^5.6.2"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
